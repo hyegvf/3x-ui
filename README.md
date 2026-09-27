@@ -1,6 +1,10 @@
 # 3x-ui Panel — Railway Deployment 🚀
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https://github.com/hyegvf/3x-ui)
+
 دیپلوی پنل **3x-ui** (نسخه‌ی رسمی و آخرین ریلیز — در حال حاضر **v3.8.5**) روی **Railway** با استفاده از ایمیج رسمی `ghcr.io/mhsanaei/3x-ui:latest`.
+
+> ⚡️ سریع‌ترین راه: روی دکمه‌ی **Deploy on Railway** بالا کلیک کنید — پروژه به‌صورت خودکار از همین ریپو ساخته می‌شود.
 
 این ریپو هیچ کدی از 3x-ui را کپی نمی‌کند؛ ایمیج **رسمی** پروژه در [MHSanaei/3x-ui](https://github.com/MHSanaei/3x-ui) مستقیماً کشیده می‌شود، بنابراین همیشه **آخرین نسخه‌ی رسمی** اجرا می‌شود.
 
@@ -81,6 +85,35 @@ Railway ترافیک HTTP/HTTPS و WebSocket را روی دامنه‌ی سرو�
 | `PORT` | توسط Railway ست می‌شود | پورت پنل؛ اگر ست نشود `2053` |
 | `XUI_DB_TYPE` | `sqlite` | امکان `postgres` (DSN لازم دارد) |
 | `XUI_DB_DSN` | — | رشته‌ی اتصال PostgreSQL وقتی `XUI_DB_TYPE=postgres` است |
+
+---
+
+## 🛠️ رفع اشکال (Troubleshooting)
+
+### ❌ خطای `You are creating projects too quickly`
+این خطا **ربطی به پنل یا این ریپو ندارد** — محدودیت خودِ Railway است: هر ورک‌اسپیس فقط هر **۳۰ ثانیه** یک بار اجازه‌ی ساخت پروژه‌ی جدید دارد.
+
+- ۳۰ تا ۶۰ ثانیه صبر کنید و فقط **یک بار** کلیک کنید.
+- راه بهتر: یک پروژه بسازید (Empty Project) و داخل همان پروژه با **+ New → GitHub Repo** سرویس `3x-ui` را اضافه کنید — این کار پروژه‌ی جدید نمی‌سازد و مشمول محدودیت نیست.
+- یا از دکمه‌ی **Deploy on Railway** بالای همین فایل استفاده کنید.
+
+### ❌ پنل بعد از دیپلوی باز نمی‌شود
+1. در تب **Deployments** لاگ‌های بیلد و ران‌تایم را ببینید؛ باید خط `[start.sh] Panel port configured successfully` را ببینید.
+2. در **Settings → Networking** مطمئن شوید دامنه ساخته شده و **Target Port** درست است (پیش‌فرض `2053`).
+3. اگر پورت را دستی عوض کردید، **Redeploy** بزنید — اسکریپت استارت پنل را با پورت جدید هماهنگ می‌کند.
+
+### ❌ رمز admin/admin کار نمی‌کند
+- اگر **Volume** ندارید: با هر دیپلوی، دیتابیس از نو ساخته می‌شود؛ یعنی رمز دوباره `admin/admin` است (پس حتماً همین اول عوضش کنید!).
+- اگر **Volume** دارید و رمز را فراموش کردید: با Railway CLI و دستور `railway ssh` وارد بشوید و اجرا کنید:
+  ```bash
+  /app/x-ui setting -username myuser -password MyStrongPass123
+  ```
+
+### ❌ سرویس بعد از مدت‌ها بی‌استفاده خوابید
+- در `railway.json` مقدار `sleepApplication: false` ست شده است؛ اگر باز هم خوابید (پلن Trial)، پلن را ارتقا دهید یا سرویس را دستی **Restart** کنید.
+
+### ❌ بیلد خطای pull از ghcr می‌دهد
+- خطای موقتی شبکه/رجیستری است؛ یک بار **Redeploy** بزنید.
 
 ---
 
