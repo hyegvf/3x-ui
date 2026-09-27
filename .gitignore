@@ -1,0 +1,12 @@
+# OS junk
+.DS_Store
+Thumbs.db
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local git artifacts
+*.orig
