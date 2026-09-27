@@ -1,0 +1,31 @@
+# ============================================================
+#  3x-ui — Official image deployment (VPS / any Docker host)
+#  Usage:  docker compose up -d
+#  Panel:  http://<SERVER_IP>:2053  (first login: admin / admin)
+# ============================================================
+services:
+  3x-ui:
+    image: ghcr.io/mhsanaei/3x-ui:latest
+    container_name: 3x-ui
+    hostname: 3x-ui
+    restart: unless-stopped
+    tty: true
+    # fail2ban (IP-limit) needs these capabilities on a VPS
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TZ=Asia/Tehran
+      - XRAY_VMESS_AEAD_FORCED=false
+      - XUI_ENABLE_FAIL2BAN=true
+    volumes:
+      - $PWD/db/:/etc/x-ui/          # panel database (persists)
+      - $PWD/cert/:/root/cert/       # SSL certificates
+      - $PWD/acme/:/root/.acme.sh/   # acme.sh state for auto-renewal
+    ports:
+      - "2053:2053"                  # panel port
+      # 👇 Xray inbounds need their own host ports. Either add them here:
+      # - "443:443"
+      # - "8443:8443"
+      # ...or comment out the whole "ports:" block and use:
+      # network_mode: host
